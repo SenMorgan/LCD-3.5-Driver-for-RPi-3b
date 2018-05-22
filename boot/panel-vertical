@@ -1,0 +1,116 @@
+# lxpanel <profile> config file. Manually editing is not recommended.
+# Use preference dialog in lxpanel to adjust config when you can.
+
+Global {
+  edge=left
+  allign=left
+  margin=0
+  widthtype=percent
+  width=100
+  height=36
+  transparent=1
+  tintcolor=#bbbbbb
+  alpha=172
+  autohide=0
+  heightwhenhidden=2
+  setdocktype=1
+  setpartialstrut=1
+  usefontcolor=0
+  fontsize=8
+  fontcolor=#ffffff
+  usefontsize=1
+  background=0
+  backgroundfile=/usr/share/lxpanel/images/background.png
+  iconsize=26
+  monitor=0
+  align=center
+}
+Plugin {
+  type=menu
+  Config {
+    system {
+    }
+    separator {
+    }
+    item {
+      command=run
+    }
+    separator {
+    }
+    item {
+      command=logout
+      image=gnome-logout
+    }
+    image=/usr/share/rpd-wallpaper/raspberry-pi-logo.png
+  }
+}
+Plugin {
+  type=launchbar
+  Config {
+    Button {
+      id=lxde-x-www-browser.desktop
+    }
+    Button {
+      id=pcmanfm.desktop
+    }
+    Button {
+      id=lxterminal.desktop
+    }
+  }
+}
+Plugin {
+  type=taskbar
+  expand=1
+  Config {
+    tooltips=1
+    IconsOnly=1
+    ShowAllDesks=0
+    UseMouseWheel=1
+    UseUrgencyHint=1
+    FlatButton=0
+    MaxTaskWidth=200
+    spacing=1
+    GroupedTasks=1
+  }
+}
+Plugin {
+  type=bluetooth
+  Config {
+  }
+}
+Plugin {
+  type=dhcpcdui
+  Config {
+  }
+}
+Plugin {
+  type=volumealsabt
+  Config {
+  }
+}
+Plugin {
+  type=monitors
+  Config {
+    DisplayCPU=1
+    DisplayRAM=0
+    RAMColor=#04FF00
+    CPUColor=#04FF00
+  }
+}
+Plugin {
+  type=thermal
+  Config {
+    NormalColor=#04ff00
+    Warning1Color=#fff000
+    Warning2Color=#ff0000
+    AutomaticLevels=0
+    Warning1Temp=60
+    Warning2Temp=75
+    AutomaticSensor=1
+  }
+}
+Plugin {
+  type=ejecter
+  Config {
+  }
+}

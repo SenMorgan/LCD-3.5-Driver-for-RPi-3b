@@ -1,0 +1,29 @@
+if [ -f /etc/X11/xorg.conf.d/99-calibration.conf ];then
+	if [ -d ./backup ];then
+		echo "Restore backup files..."
+		sudo cp ./backup/99-fbturbo.conf /usr/share/X11/xorg.conf.d/
+		sudo cp ./backup/config.txt /boot/
+		sudo cp ./backup/cmdline.txt /boot/
+		sudo cp ./backup/modules /etc/		
+		sudo cp ./backup/panel /home/pi/.config/lxpanel/LXDE-pi/panels/
+	else
+		if [ -d /home/pi/em-backup ];then
+			echo "Can't find backup folder! Copying first time backup..."
+			sudo cp /home/pi/em-backup/99-fbturbo.conf /usr/share/X11/xorg.conf.d/
+			sudo cp /home/pi/em-backup/config.txt /boot/
+			sudo cp /home/pi/em-backup/cmdline.txt /boot/
+			sudo cp /home/pi/em-backup/modules /etc/		
+			sudo cp /home/pi/em-backup/panel /home/pi/.config/lxpanel/LXDE-pi/panels/
+		else
+			echo "Can't find emergency backup folder too! Vse, pizdec, priechali... :-("
+			exit 1
+		fi
+	fi
+	
+	echo "Remove old files..."	
+	sudo rm -r /etc/X11/xorg.conf.d
+	echo "Reboot!"
+	sudo reboot
+else
+	echo "No 99-calibration file, nothing to do"
+fi

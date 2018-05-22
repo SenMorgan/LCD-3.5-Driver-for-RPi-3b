@@ -1,0 +1,74 @@
+if test "$#" != "0" -a "$1" != "0" -a "$1" != "90" -a "$1" != "180" -a "$1" != "270" -a "$1" != "fts"; then
+	echo "Invalid parameter!"
+	echo "Usage: LCD35-show [0] [90] [180] [270] or [fts] for first time start"
+	#[fts] means "first time starting". Need internet connection to download touchpad driver
+else 
+	if [ ! -f /etc/X11/xorg.conf.d/99-calibration.conf ];then
+		if [ ! -d /etc/X11/xorg.conf.d ];then
+			sudo mkdir /etc/X11/xorg.conf.d
+		fi
+		if [ ! -d ./backup ];then				
+			sudo mkdir ./backup
+		fi
+		#backup original files
+		echo "Start backup original files..."
+		sudo cp -rf /usr/share/X11/xorg.conf.d/99-fbturbo.conf ./backup/
+		sudo cp -rf /boot/config.txt ./backup/
+		sudo cp -rf /boot/cmdline.txt ./backup/	
+		sudo cp -rf /etc/modules ./backup
+		sudo cp -rf /home/pi/.config/lxpanel/LXDE-pi/panels/panel ./backup
+	fi	
+			
+	#copy new files
+	echo "Copy new files..."
+	sudo cp -rf ./usr/tft35a-overlay.dtb /boot/overlays/
+	sudo cp -rf ./usr/tft35a-overlay.dtb /boot/overlays/tft35a.dtbo
+	sudo cp -rf ./usr/99-fbturbo.conf  /usr/share/X11/xorg.conf.d/
+	sudo cp -rf ./usr/cmdline.txt /boot/	
+			
+	if test "$1" = "0" -o "$#" = "0";then
+		sudo cp -rf ./usr/calibration/99-calibration.conf-35 /etc/X11/xorg.conf.d/99-calibration.conf
+		sudo cp -rf ./boot/config-35.txt /boot/config.txt
+		sudo cp -rf ./boot/panel-horizontal /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+		echo "LCD default position"
+	elif test "$1" = "90";then
+		sudo cp -rf ./usr/calibration/99-calibration.conf-35-90 /etc/X11/xorg.conf.d/99-calibration.conf
+		sudo cp -rf ./boot/config-35-90.txt /boot/config.txt
+		sudo cp -rf ./boot/panel-vertical /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+		echo "LCD rotating to 90 degrees"
+	elif test "$1" = "180";then
+		sudo cp -rf ./usr/calibration/99-calibration.conf-35-180 /etc/X11/xorg.conf.d/99-calibration.conf
+		sudo cp -rf ./boot/config-35-180.txt /boot/config.txt
+		sudo cp -rf ./boot/panel-horizontal /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+		echo "LCD rotating to 180 degrees"
+	elif test "$1" = "270"; then
+		sudo cp -rf ./usr/calibration/99-calibration.conf-35-270 /etc/X11/xorg.conf.d/99-calibration.conf
+		sudo cp -rf ./boot/config-35-270.txt /boot/config.txt
+		sudo cp -rf ./boot/panel-vertical /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+		echo "LCD rotating to 270 degrees"
+	elif test "$1" = "fts"; then
+		#emergency backup folder for secondary backup
+		if [ ! -d /home/pi/em-backup ];then
+			sudo mkdir /home/pi/em-backup
+			echo "Start backup original files to emergency folder..."
+			sudo cp /usr/share/X11/xorg.conf.d/99-fbturbo.conf /home/pi/em-backup
+			sudo cp /boot/config.txt /home/pi/em-backup/
+			sudo cp /boot/cmdline.txt /home/pi/em-backup/	
+			sudo cp /etc/modules /home/pi/em-backup
+			sudo cp /home/pi/.config/lxpanel/LXDE-pi/panels/panel /home/pi/em-backup
+		fi
+		
+		sudo cp -rf ./usr/calibration/99-calibration.conf-35 /etc/X11/xorg.conf.d/99-calibration.conf
+		sudo cp -rf ./boot/config-35.txt /boot/config.txt
+		sudo cp -rf ./boot/panel-horizontal /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+		echo "Copy overlay..."
+		sudo cp -rf ./usr/tft35a-overlay.dtb /boot/overlays/
+		sudo cp -rf ./usr/tft35a-overlay.dtb /boot/overlays/tft35a.dtbo
+			
+		sudo dpkg -i -B xserver-xorg-input-evdev_2.10.5-1_armhf.deb		
+		sudo cp -rf /usr/share/X11/xorg.conf.d/10-evdev.conf /usr/share/X11/xorg.conf.d/45-evdev.conf		
+	fi	
+	
+	echo "Reboot!"
+	sudo reboot
+fi
